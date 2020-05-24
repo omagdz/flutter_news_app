@@ -4,7 +4,7 @@ import 'package:news_app/models/ArticleModel.dart';
 import 'package:http/http.dart' as http;
 
 class News {
-  List<ArticleModel> news = new List();
+  List<ArticleModel> news = [];
 
   Future<void> getNews() async {
     String url =
@@ -14,9 +14,7 @@ class News {
     var jsonData = jsonDecode(response.body);
     if (jsonData['status'] == 'ok') {
       jsonData['articles'].forEach((element) {
-        if (jsonData['urlToImage'] != null &&
-            jsonData['description'] != null &&
-            jsonData['title'] != null) {
+        if (element['urlToImage'] != null && element['description'] != null) {
           ArticleModel articleModel = ArticleModel(
             author: element['author'],
             title: element['title'],

@@ -23,9 +23,9 @@ class _HomeState extends State<Home> {
   bool _loading = true;
 
   getNews() async {
-    News news = News();
-    await news.getNews();
-    articles = news.news;
+    News newsClass = News();
+    await newsClass.getNews();
+    articles = newsClass.news;
     setState(() {
       _loading = false;
     });
@@ -57,38 +57,40 @@ class _HomeState extends State<Home> {
             )
 
           // Categories
-          : Container(
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 6.0),
-                    height: 60,
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) {
-                        return CategotyTile(categories[index].categoryName,
-                            categories[index].categoryUrl);
-                      },
-                      itemCount: categories.length,
-                    ),
-                  ),
-
-                  // Articles
-                  Container(
-                    child: ListView.builder(
-                        scrollDirection: Axis.vertical,
+          : SingleChildScrollView(
+              child: Container(
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 6.0),
+                      height: 60,
+                      child: ListView.builder(
                         shrinkWrap: true,
-                        itemCount: articles.length,
+                        scrollDirection: Axis.horizontal,
                         itemBuilder: (context, index) {
-                          return BlogTile(
-                            imageUrl: articles[index].imageUrl,
-                            desc: articles[index].description,
-                            title: articles[index].title,
-                          );
-                        }),
-                  ),
-                ],
+                          return CategotyTile(categories[index].categoryName,
+                              categories[index].categoryUrl);
+                        },
+                        itemCount: categories.length,
+                      ),
+                    ),
+                    Container(
+                      padding:
+                          EdgeInsets.only(top: 20.0, left: 10.0, right: 10.0),
+                      child: ListView.builder(
+                          physics: ClampingScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: articles.length,
+                          itemBuilder: (context, index) {
+                            return BlogTile(
+                              imageUrl: articles[index].imageUrl,
+                              desc: articles[index].description,
+                              title: articles[index].title,
+                            );
+                          }),
+                    ),
+                  ],
+                ),
               ),
             ),
     );
@@ -157,9 +159,20 @@ class BlogTile extends StatelessWidget {
     return Container(
       child: Column(
         children: <Widget>[
-          Image.network(imageUrl),
-          Text(title),
-          Text(desc),
+          ClipRRect(
+            child: Image.network(imageUrl),
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          Text(title,
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold,
+              )),
+          Text(
+            desc,
+            style: TextStyle(color: Colors.grey[800]),
+          ),
         ],
       ),
     );
